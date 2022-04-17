@@ -1,0 +1,72 @@
+create database  store ;
+use store ;
+create table counter(
+   code int primary key,
+   name varchar(20) not null ,
+   continent_name  varchar(20) unique
+
+);
+
+create table users (
+ id  int primary key ,
+ full_name varchar(20),
+ emile varchar(20) unique,
+ gender char(1) check (gender='m' or gender='f' ),
+ date_of_bairth varchar(15),
+ created_at datetime,
+ counter_code int ,
+ foreign key  (counter_code) references counter (code)
+
+);
+
+
+create table orders (
+id int primary key,
+user_id int,
+status varchar(6) check ( status='start' or status='finish' ),
+created_at datetime,
+foreign key (user_id) references  users (id)
+);
+
+create table products (
+    id int primary key ,
+    name varchar(10) not null ,
+    price int default 0,
+    status varchar(10) check ( status='valid' or status='expired' ),
+    created_at datetime
+);
+
+create table order_products (
+    order_id int  ,
+    product_id int  ,
+    quantity int  default 0,
+    primary key (order_id , product_id),
+    foreign key (order_id) references  orders (id),
+    foreign key  (product_id) references  products (id)
+
+);
+
+alter table users modify column created_at  DateTime default current_timestamp;
+alter table orders modify column created_at  DateTime default current_timestamp;
+alter table products modify column created_at  DateTime default current_timestamp;
+
+
+
+RENAME TABLE counter TO countries;
+
+insert into  countries values ( 1, 'Saudi Arabia', 'Asia') ;
+insert into  countries values ( 2, 'Egypt', 'Europe') ;
+insert into  users (id, full_name, emile, gender, date_of_bairth, counter_code)
+values (1 , 'amal' , 'asdf@sjjf.com', 'f', '1/2/1998', 1);
+
+insert into  orders (id, user_id, status) values (1, 1, 'start');
+
+insert into products (id, name, price, status) values (1, 'book', 200 , 'valid');
+insert into products (id, name, price, status) values (2, 'ipad', 300 , 'valid');
+
+insert into order_products values (1, 1, 10) ;
+
+
+update countries set continent_name = 'Africa' where code=2 ;
+
+delete from products where id=2;
